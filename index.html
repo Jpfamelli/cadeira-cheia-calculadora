@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#FAFAF9">
+<title>Quanto custam as faltas · Cadeira Cheia</title>
+<meta name="description" content="Calculadora gratuita: veja em reais o que as faltas custam à sua clínica odontológica por mês e se faz sentido medir isso com a Cadeira Cheia.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111'/%3E%3Ccircle cx='9' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%231F4BFF'/%3E%3Ccircle cx='23' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF9; --ink:#111; --mut:#555; --mut2:#666; --hair:#DDDCD8; --blue:#1F4BFF;
+  --ok:#0A7A3E; --edge:#B26A00; --no:#C9281A;
+  --f:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --pad:clamp(20px,5vw,84px);
+}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--f);overflow-x:hidden}
+a{color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{padding-left:var(--pad);padding-right:var(--pad)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+
+header.top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:0 var(--pad);padding:22px 0 16px;border-bottom:1px solid var(--ink);font-size:15px;font-weight:500}
+header.top span{color:var(--mut);font-weight:400}
+
+/* ===== HERO ===== */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"head ctrl" "num ctrl" "agenda ctrl";grid-template-rows:auto auto 1fr;column-gap:clamp(40px,6vw,100px);padding:clamp(28px,5vh,56px) var(--pad) clamp(40px,7vh,72px);align-items:start}
+@media(max-width:960px){.hero{grid-template-columns:1fr;grid-template-areas:"head" "num" "ctrl" "agenda"}}
+.a-head{grid-area:head}.a-num{grid-area:num}.a-ctrl{grid-area:ctrl}.a-agenda{grid-area:agenda;margin-top:22px;width:100%}
+
+h1{font-weight:300;font-size:clamp(36px,4.6vw,66px);line-height:1.02;letter-spacing:-.04em;max-width:16ch}
+h1 b{font-weight:600}
+.rise{opacity:0;transform:translateY(14px);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.a-num{animation-delay:.1s}
+
+.k{font-size:15px;color:var(--mut);margin-top:clamp(18px,3vh,32px)}
+.num{container-type:inline-size;margin:2px 0 4px}
+.num>div{display:flex;align-items:flex-start;gap:.06em;font-weight:300;line-height:.92;letter-spacing:-.065em;font-variant-numeric:tabular-nums;
+  font-size:clamp(84px,12vw,190px);font-size:min(30cqi,230px)}
+.num[data-l="7"]>div{font-size:min(25cqi,230px)}
+.num[data-l="5"]>div,.num[data-l="4"]>div,.num[data-l="3"]>div{font-size:min(36cqi,230px)}
+.num small{font-size:.22em;font-weight:400;letter-spacing:0;margin-top:.22em;margin-right:.12em}
+.num b{font-weight:inherit}
+.sub{font-size:18px;color:var(--mut);max-width:48ch}
+.sub b{color:var(--ink);font-weight:500;white-space:nowrap}
+
+/* controles */
+.a-ctrl{width:100%;padding-top:6px}
+.row{padding:16px 0 12px;border-bottom:1px solid var(--hair)}
+.rh{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.rh label,.rh .lb{font-size:15px;color:var(--mut);font-weight:400}
+output{font-weight:300;font-size:36px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.row small{display:block;font-size:13px;color:var(--mut2);margin-top:2px;line-height:1.4}
+input[type=range]{--p:50%;display:block;width:100%;height:28px;margin:2px 0 0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:linear-gradient(to right,var(--ink) var(--p),#C9C8C3 var(--p))}
+input[type=range]::-moz-range-track{height:2px;border-radius:1px;background:#C9C8C3}
+input[type=range]::-moz-range-progress{height:2px;border-radius:1px;background:var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;box-sizing:border-box;width:22px;height:22px;margin-top:-10px;border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink);transition:transform .15s}
+input[type=range]::-moz-range-thumb{box-sizing:border-box;width:22px;height:22px;border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink)}
+input[type=range]:hover::-webkit-slider-thumb,input[type=range]:active::-webkit-slider-thumb{transform:scale(1.2)}
+input[type=range]:focus-visible{outline-offset:2px;border-radius:6px}
+
+.seg{display:flex;gap:8px;margin-top:10px}
+.seg button{flex:1;font:inherit;font-size:17px;font-weight:500;padding:11px 14px;background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+.seg button:hover{background:#ECEBE7}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+
+.recbox{padding-top:22px}
+.recbox .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:18px}
+.recbox .tot span{font-size:15px;color:var(--mut)}
+.recbox .tot b{font-weight:300;font-size:clamp(40px,4.4vw,60px);letter-spacing:-.05em;line-height:1;color:var(--blue);font-variant-numeric:tabular-nums}
+.recbox p{font-size:13px;color:var(--mut2);margin-top:10px;line-height:1.5;max-width:56ch}
+
+/* agenda */
+canvas{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:14px;color:var(--mut)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend span::before{content:"";width:11px;height:11px;border-radius:50%;box-sizing:border-box}
+.l-ok::before{background:var(--ink)}
+.l-falta::before{border:1.5px solid var(--ink)}
+.l-rec::before{background:var(--blue)}
+
+/* ===== VEREDITO ===== */
+.vd{margin:0 var(--pad);border-top:1px solid var(--ink);padding:clamp(30px,4.5vw,60px) 0 clamp(40px,7vw,90px)}
+.eyebrow{font-size:14px;color:var(--mut);margin-bottom:26px}
+.vgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(30px,6vw,100px);align-items:start}
+@media(max-width:900px){.vgrid{grid-template-columns:1fr}}
+.tag{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:500;margin-bottom:16px}
+.tag::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--ok)}
+.tag.edge::before{background:var(--edge)}
+.tag.no::before{background:var(--no)}
+.vd h2{font-weight:300;font-size:clamp(34px,4.8vw,66px);line-height:1.03;letter-spacing:-.04em;margin-bottom:20px}
+.vd .vp{font-size:18px;color:var(--mut);max-width:50ch}
+
+.bar{margin-bottom:26px}
+.bl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:15px;color:var(--mut)}
+.bl b{font-weight:300;font-size:32px;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.bl em{font-style:normal}
+.track{position:relative;height:10px;border-radius:5px;background:#E7E6E2}
+.track i{position:absolute;inset:0 auto 0 0;border-radius:5px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+#f-rec{background:var(--blue);width:100%}
+#f-preco{background:var(--ink)}
+.lim{position:absolute;top:-6px;bottom:-6px;left:15%;width:2px;background:var(--ink)}
+.lim::after{content:"15%";position:absolute;top:100%;left:50%;transform:translateX(-50%);font-size:13px;font-weight:500;color:var(--ink);margin-top:3px}
+.barnote{font-size:14px;color:var(--mut2);margin:34px 0 22px}
+dl.facts{display:grid;grid-template-columns:1fr auto;border-top:1px solid var(--ink)}
+dl.facts dt,dl.facts dd{padding:13px 0;border-bottom:1px solid var(--hair)}
+dl.facts dt{font-size:15px;color:var(--mut)}
+dl.facts dd{font-weight:300;font-size:26px;line-height:1.1;letter-spacing:-.03em;text-align:right;font-variant-numeric:tabular-nums}
+
+.cta{margin-top:clamp(34px,5vw,56px);display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font:inherit;font-weight:500;font-size:17px;padding:17px 30px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;transition:background .18s,color .18s,transform .18s}
+.btn:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.note{font-size:14px;color:var(--mut2);margin-top:16px;max-width:72ch}
+
+/* ===== COMO FUNCIONA ===== */
+.how{margin:0 var(--pad);border-top:1px solid var(--ink);padding:clamp(40px,7vw,90px) 0}
+.how h2{font-weight:300;font-size:clamp(34px,4.8vw,66px);line-height:1.03;letter-spacing:-.04em;max-width:18ch;margin-bottom:clamp(30px,5vw,60px)}
+.how h2 b{font-weight:600}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,4vw,56px)}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+.steps span{display:block;font-weight:300;font-size:56px;line-height:1;letter-spacing:-.05em;margin-bottom:14px}
+.steps h3{font-size:21px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em}
+.steps p{color:var(--mut);font-size:16.5px}
+
+footer{margin:0 var(--pad);border-top:1px solid var(--hair);padding:28px 0 56px;font-size:13px;line-height:1.6;color:var(--mut)}
+footer p{max-width:84ch;margin-bottom:8px}
+
+/* ===== BARRA FIXA NO CELULAR ===== */
+.dock{display:none}
+@media(max-width:960px){
+  body{padding-bottom:72px}
+  .dock{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--bg);border-top:1px solid var(--ink);color:var(--ink);text-decoration:none;padding:10px 20px;align-items:center;justify-content:space-between;gap:12px;transition:transform .3s}
+  .dock.off{transform:translateY(110%)}
+  .dock small{font-size:12px;color:var(--mut);display:block;line-height:1.2}
+  .dock b{font-weight:300;font-size:32px;line-height:1.05;letter-spacing:-.05em}
+  .dock .tag{margin:0;font-size:14px}
+}
+
+/* ===== CURSOR ===== */
+.ring{display:none}
+@media(hover:hover) and (pointer:fine){
+  .ring{display:block;position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.5px solid #fff;border-radius:50%;pointer-events:none;z-index:99;mix-blend-mode:difference;opacity:0;transition:opacity .25s,width .22s,height .22s,margin .22s,background .22s}
+  .ring.on{opacity:1}
+  .ring.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:#fff}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  .rise{opacity:1;transform:none}
+  .ring{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="ring" id="ring" aria-hidden="true"></div>
+
+<header class="top"><b>Cadeira Cheia</b><span>Calculadora gratuita · 1 minuto</span></header>
+
+<main>
+<section class="hero">
+  <div class="a-head rise"><h1>Quanto custam <b>as faltas</b> na sua agenda?</h1></div>
+
+  <div class="a-num rise">
+    <p class="k">Por mês, em horários que ficaram vazios</p>
+    <div class="num" id="numbox" data-l="6" aria-hidden="true"><div><small>R$</small><b id="perda">0</b></div></div>
+    <p class="sub">São <b id="nfaltas">0</b> horários vazios por mês. Em um ano, <b id="ano">R$ 0</b>.</p>
+    <p class="sr" id="live" aria-live="polite"></p>
+  </div>
+
+  <form class="a-ctrl rise" id="f" onsubmit="return false" aria-label="Dados da clínica">
+    <div class="row">
+      <div class="rh"><label for="cons">Consultas por mês</label><output id="o-cons" for="cons">300</output></div>
+      <input type="range" id="cons" min="80" max="700" step="10" value="300">
+    </div>
+    <div class="row">
+      <div class="rh"><label for="taxa">Pacientes que faltam</label><output id="o-taxa" for="taxa">22%</output></div>
+      <input type="range" id="taxa" min="5" max="45" step="1" value="22">
+      <small>No Brasil, estima-se entre 20% e 30%. Sem dado seu, use 22%.</small>
+    </div>
+    <div class="row">
+      <div class="rh"><label for="val">Receita média por horário</label><output id="o-val" for="val">R$ 200</output></div>
+      <input type="range" id="val" min="80" max="500" step="10" value="200">
+      <small>Quanto a clínica fatura, em média, em uma cadeira por consulta.</small>
+    </div>
+    <div class="row">
+      <div class="rh"><span class="lb" id="lb-cad">Cadeiras</span></div>
+      <div class="seg" role="group" aria-labelledby="lb-cad" id="seg">
+        <button type="button" data-v="1" aria-pressed="true">1</button>
+        <button type="button" data-v="2" aria-pressed="false">2</button>
+        <button type="button" data-v="3" aria-pressed="false">3</button>
+        <button type="button" data-v="4" aria-pressed="false">4+</button>
+      </div>
+    </div>
+    <div class="recbox">
+      <div class="rh"><label for="rec">Quanto dessa perda dá para recuperar</label><output id="o-rec" for="rec">30%</output></div>
+      <input type="range" id="rec" min="20" max="45" step="5" value="30">
+      <div class="tot"><span>Receita recuperável por mês</span><b id="recv">R$ 0</b></div>
+      <p>Hipótese de trabalho, não promessa: o resultado depende da sua agenda, dos seus pacientes e de como a recepção usa o sistema. Por isso o primeiro passo é medir o seu número real.</p>
+    </div>
+  </form>
+
+  <div class="a-agenda rise">
+    <canvas id="cv" width="900" height="320" role="img" aria-label="Agenda do mês: cada ponto é uma consulta. Os vazados são faltas e os azuis são horários recuperados."></canvas>
+    <div class="legend"><span class="l-ok">compareceu</span><span class="l-falta">faltou</span><span class="l-rec">horário recuperado</span></div>
+  </div>
+</section>
+
+<section class="vd" id="verdict">
+  <p class="eyebrow">O veredito, com os seus números</p>
+  <div class="vgrid">
+    <div>
+      <span class="tag" id="tag">cabe</span>
+      <h2 id="vt"></h2>
+      <p class="vp" id="vp"></p>
+    </div>
+    <div>
+      <div class="bar">
+        <div class="bl"><span>Dá para recuperar por mês</span><b id="b-rec">R$ 0</b></div>
+        <div class="track"><i id="f-rec"></i></div>
+      </div>
+      <div class="bar" id="bar-preco">
+        <div class="bl"><span>Mensalidade <em id="b-plano"></em></span><b id="b-preco">—</b></div>
+        <div class="track"><i id="f-preco" style="width:0"></i><span class="lim" aria-hidden="true"></span></div>
+      </div>
+      <p class="barnote" id="barnote">As duas barras usam a mesma escala. A linha marca 15% do que dá para recuperar: acima disso, a conta deixa de ser óbvia.</p>
+      <dl class="facts">
+        <dt>Plano indicado</dt><dd id="d-plano">—</dd>
+        <dt>Mensalidade ÷ recuperável</dt><dd id="d-ratio">—</dd>
+        <dt>Perda mensal mínima para fazer sentido</dt><dd id="d-min">—</dd>
+        <dt>Piloto de 14 dias (R$ 497)</dt><dd id="d-piloto">—</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="cta">
+    <a class="btn" id="wa" href="#" rel="noopener">Quero medir minha clínica em 14 dias</a>
+    <button class="btn ghost" id="copy" type="button">Copiar o resumo</button>
+  </div>
+  <p class="note" id="nota">O piloto é pago e devolvido se o extrato de receita recuperada não passar do que você pagou. Ao tocar no botão, abre o seu WhatsApp com a conta já escrita. Nenhum dado seu é enviado por esta página.</p>
+</section>
+
+<section class="how">
+  <h2>Não prometemos um percentual. <b>Medimos o seu.</b></h2>
+  <div class="steps">
+    <div><span>01</span><h3>Medimos antes</h3><p>Levantamos a sua taxa de falta real, com intervalo de confiança. Sem número de antes, não existe número de depois.</p></div>
+    <div><span>02</span><h3>Agimos em cada horário</h3><p>Confirmação ativa pelo WhatsApp oficial da própria clínica, vaga reocupada pela lista de espera e régua para quem faltou.</p></div>
+    <div><span>03</span><h3>Mostramos o extrato</h3><p>Cada real recuperado tem evidência e pode ser conferido linha a linha. Sem percentual mágico, sem promessa.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>Estimativa para fins de planejamento, calculada no seu navegador. Não é promessa de resultado nem garantia de redução de faltas. Recuperável de 20% a 45% da perda é uma hipótese a ser medida em cada clínica.</p>
+  <p>A Cadeira Cheia não é prontuário e não trata diagnóstico nem prescrição. Cuida só do comparecimento: confirma, preenche vagas e mede. Dados de pacientes tratados conforme a LGPD, com consentimento registrado e opt-out em toda mensagem.</p>
+</footer>
+
+<a class="dock" id="dock" href="#verdict" aria-label="Ver o veredito">
+  <span><small>As faltas custam por mês</small><b id="dock-v">R$ 0</b></span>
+  <span class="tag" id="dock-t">cabe</span>
+</a>
+
+<script>
+/* ===== CONFIGURAÇÃO ===== */
+const CONFIG = {
+  whatsapp: "",              // número que recebe o contato, só dígitos com DDI. Ex.: "5512999999999". Vazio = botão só copia o resumo.
+  planos: { essencial: 397, clinica: 697 },
+  piloto: 497,
+  limite: 0.15,              // mensalidade <= 15% do recuperado
+  borda: 0.25                // entre 15% e 25% = "no limite"
+};
+
+const $ = (id) => document.getElementById(id);
+const BRL = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+const PCT = (r) => (r * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
+const S = { cons: 300, taxa: 22, val: 200, cad: 1, rec: 30 };
+const REDUZ = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let shown = 0;
+
+/* ===== CÁLCULO ===== */
+function calc() {
+  const faltas = Math.round(S.cons * S.taxa / 100);
+  const perda = faltas * S.val;
+  const recup = perda * S.rec / 100;
+  let plano = null, preco = null;
+  if (S.cad === 1) { plano = "Essencial"; preco = CONFIG.planos.essencial; }
+  else if (S.cad <= 3) { plano = "Clínica"; preco = CONFIG.planos.clinica; }
+  const ratio = preco ? preco / recup : null;
+  const min = preco ? preco / CONFIG.limite / (S.rec / 100) : null;
+  const piloto = perda * 14 / 30 * S.rec / 100;
+  return { faltas, perda, recup, plano, preco, ratio, min, piloto };
+}
+
+/* ===== TEXTO ===== */
+let liveT = 0;
+function render() {
+  const c = calc();
+  $("o-cons").textContent = S.cons;
+  $("o-taxa").textContent = S.taxa + "%";
+  $("o-val").textContent = BRL(S.val);
+  $("o-rec").textContent = S.rec + "%";
+  $("nfaltas").textContent = c.faltas;
+  $("ano").textContent = BRL(c.perda * 12);
+  $("recv").textContent = BRL(c.recup);
+  $("b-rec").textContent = BRL(c.recup);
+  $("dock-v").textContent = BRL(c.perda);
+  $("d-piloto").textContent = "≈ " + BRL(c.piloto);
+  $("numbox").dataset.l = Math.min(7, Math.max(3, c.perda.toLocaleString("pt-BR").length));
+  document.querySelectorAll("input[type=range]").forEach((el) => el.style.setProperty("--p", ((el.value - el.min) / (el.max - el.min) * 100) + "%"));
+
+  const tag = $("tag"), dt = $("dock-t");
+  const barPreco = $("bar-preco");
+  let cls, txt;
+  if (!c.preco) {
+    cls = "edge"; txt = "fora do perfil";
+    $("vt").textContent = "Clínicas com 4 ou mais cadeiras pedem outro desenho.";
+    $("vp").textContent = "Hoje o produto é feito para clínicas de dono operador, de 1 a 3 cadeiras. Fale com a gente se quiser conversar sobre o seu caso.";
+    $("d-plano").textContent = "sob consulta"; $("d-ratio").textContent = "—"; $("d-min").textContent = "—"; $("d-piloto").textContent = "—";
+    barPreco.hidden = true; $("barnote").hidden = true;
+  } else {
+    barPreco.hidden = false; $("barnote").hidden = false;
+    $("b-plano").textContent = "· plano " + c.plano;
+    $("b-preco").textContent = BRL(c.preco) + "/mês";
+    $("f-preco").style.width = Math.min(100, c.ratio * 100) + "%";
+    $("d-plano").textContent = c.plano;
+    $("d-ratio").textContent = PCT(c.ratio);
+    $("d-min").textContent = BRL(c.min);
+    if (c.ratio <= CONFIG.limite) {
+      cls = "ok"; txt = "cabe";
+      $("vt").textContent = "A mensalidade fica abaixo de 15% do que a clínica pode recuperar.";
+      $("vp").textContent = "Com esses números, o plano " + c.plano + " custaria " + PCT(c.ratio) + " do que estimamos recuperar por mês. Vale medir a sua taxa real para confirmar.";
+    } else if (c.ratio <= CONFIG.borda) {
+      cls = "edge"; txt = "no limite";
+      $("vt").textContent = "Está perto do ponto em que a conta deixa de ser óbvia.";
+      $("vp").textContent = "A mensalidade ficaria entre 15% e 25% do recuperável estimado. Só vale se a sua taxa real de falta ou a receita por horário forem maiores do que as informadas. Medir antes responde isso.";
+    } else {
+      cls = "no"; txt = "ainda não compensa";
+      $("vt").textContent = "Com esses números, não recomendamos contratar.";
+      $("vp").textContent = "A perda mensal informada fica abaixo do mínimo de " + BRL(c.min) + " para a mensalidade se pagar com folga. Se a sua taxa de falta real for maior, refaça a conta.";
+    }
+  }
+  tag.className = "tag " + (cls === "ok" ? "" : cls); tag.textContent = txt;
+  dt.className = "tag " + (cls === "ok" ? "" : cls); dt.textContent = txt;
+
+  const resumo = "Calculadora Cadeira Cheia: " + S.cons + " consultas/mês, " + S.taxa + "% de falta, " + BRL(S.val) + " por horário, " + S.cad + (S.cad === 4 ? "+ cadeiras" : S.cad === 1 ? " cadeira" : " cadeiras") +
+    ". Perda estimada: " + BRL(c.perda) + "/mês (" + BRL(c.perda * 12) + "/ano). Recuperável (" + S.rec + "%): " + BRL(c.recup) + "/mês.";
+  render.resumo = resumo;
+  const wa = $("wa");
+  if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(resumo + " Quero medir a minha clínica no piloto de 14 dias.");
+  else wa.href = "#";
+
+  clearTimeout(liveT);
+  liveT = setTimeout(() => { $("live").textContent = "As faltas custam " + BRL(c.perda) + " por mês, " + c.faltas + " horários vazios. Veredito: " + txt + "."; }, 500);
+  grid.target(c);
+}
+
+/* ===== NÚMERO QUE CORRE ===== */
+function tickNumber(target) {
+  const el = $("perda");
+  cancelAnimationFrame(tickNumber.raf);
+  if (REDUZ) { shown = target; el.textContent = target.toLocaleString("pt-BR"); return; }
+  const step = () => {
+    shown += (target - shown) * 0.16;
+    if (Math.abs(target - shown) < 1) shown = target;
+    el.textContent = Math.round(shown).toLocaleString("pt-BR");
+    if (shown !== target) tickNumber.raf = requestAnimationFrame(step);
+  };
+  step();
+}
+
+/* ===== AGENDA DO MÊS (canvas de pontos) ===== */
+const grid = (() => {
+  const cv = $("cv"), cx = cv.getContext("2d");
+  const INK = "#111111", BLUE = "#1F4BFF";
+  const COLS = 20, PER = 5, WEEKS = 4;
+  let cells = [], W = 900, H = 320, dpr = 1, geo = {}, mouse = { x: -999, y: -999 };
+  let faltas = 0, rec = 0, total = 0, born = performance.now();
+  const rank = []; let seed = 11;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  Array.from({ length: 700 }, (_, i) => i).sort(() => rnd() - 0.5).forEach((idx, r) => (rank[idx] = r));
+
+  function layout() {
+    const rect = cv.getBoundingClientRect();
+    W = Math.max(260, rect.width); dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const small = W < 520;
+    const gw = small ? 8 : 18, head = 26;
+    const pitch = (W - (WEEKS - 1) * gw) / COLS;
+    const rows = Math.max(1, Math.ceil(total / COLS));
+    const maxH = small ? 340 : 400;
+    const py = Math.min(pitch, 22, maxH / rows);
+    const d = Math.max(4.5, Math.min(11, Math.min(pitch, py) * 0.6));
+    H = head + rows * py + 4;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + "px";
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    geo = { gw, head, pitch, py, d, weekW: PER * pitch };
+    while (cells.length < total) cells.push({ s: 0 });
+    cells.length = total;
+  }
+  function target(c) {
+    total = S.cons; faltas = c.faltas; rec = Math.round(c.faltas * S.rec / 100);
+    layout(); tickNumber(c.perda); start();
+  }
+  let raf = 0;
+  function start() { if (!raf) raf = requestAnimationFrame(draw); }
+  function draw(now) {
+    raf = 0;
+    cx.clearRect(0, 0, W, H);
+    const { gw, head, pitch, py, d, weekW } = geo;
+    cx.font = "500 12px 'Inter Tight', system-ui, sans-serif"; cx.fillStyle = "#666"; cx.textBaseline = "top";
+    for (let w = 0; w < WEEKS; w++) cx.fillText("semana " + (w + 1), w * (weekW + gw), 2);
+    let moving = false;
+    const age = (now || performance.now()) - born;
+    for (let i = 0; i < total; i++) {
+      const r = rank[i];
+      const state = r < rec ? 2 : r < faltas ? 1 : 0;
+      const c = cells[i];
+      const dk = state - c.s;
+      if (Math.abs(dk) > 0.01) { c.s += dk * 0.14; moving = true; } else c.s = state;
+      let a = 1;
+      if (!REDUZ && age < 2600) { a = Math.max(0, Math.min(1, (age - i * 2.2) / 320)); moving = true; }
+      if (a <= 0) continue;
+      const col = i % COLS, row = Math.floor(i / COLS);
+      const x = Math.floor(col / PER) * (weekW + gw) + (col % PER) * pitch + pitch / 2;
+      const y = head + row * py + py / 2;
+      const dist = Math.hypot(x - mouse.x, y - mouse.y);
+      const lift = dist < 70 ? 1 + (1 - dist / 70) * 0.8 : 1;
+      if (lift > 1) moving = true;
+      const rad = (d / 2) * lift;
+      const s = c.s;
+      const fInk = Math.max(0, 1 - s), fBlue = s > 1 ? s - 1 : 0, ring = s < 1 ? s : s < 2 ? 2 - s : 0;
+      if (fInk > 0.01) { cx.globalAlpha = fInk * a; cx.fillStyle = INK; cx.beginPath(); cx.arc(x, y, rad, 0, 6.2832); cx.fill(); }
+      if (fBlue > 0.01) { cx.globalAlpha = fBlue * a; cx.fillStyle = BLUE; cx.beginPath(); cx.arc(x, y, rad, 0, 6.2832); cx.fill(); }
+      if (ring > 0.01) { cx.globalAlpha = ring * a; cx.strokeStyle = INK; cx.lineWidth = 1.4; cx.beginPath(); cx.arc(x, y, Math.max(1, rad - 0.7), 0, 6.2832); cx.stroke(); }
+      cx.globalAlpha = 1;
+    }
+    if (moving) raf = requestAnimationFrame(draw);
+  }
+  cv.addEventListener("pointermove", (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; start(); });
+  cv.addEventListener("pointerleave", () => { mouse.x = mouse.y = -999; start(); });
+  window.addEventListener("resize", () => { layout(); start(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
+  return { target };
+})();
+
+/* ===== EVENTOS ===== */
+["cons", "taxa", "val", "rec"].forEach((id) =>
+  $(id).addEventListener("input", (e) => { S[id] = +e.target.value; render(); }));
+document.querySelectorAll("#seg button").forEach((b) => b.addEventListener("click", () => {
+  S.cad = +b.dataset.v;
+  document.querySelectorAll("#seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  render();
+}));
+$("copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(render.resumo); $("copy").textContent = "Copiado ✓"; }
+  catch (e) { prompt("Copie o resumo:", render.resumo); }
+  setTimeout(() => ($("copy").textContent = "Copiar o resumo"), 1800);
+});
+$("wa").addEventListener("click", (e) => {
+  if (!CONFIG.whatsapp) { e.preventDefault(); $("copy").click(); $("nota").textContent = "Resumo copiado. Envie para a gente pelo WhatsApp e marcamos o piloto de 14 dias."; }
+});
+
+/* anel de cursor */
+if (matchMedia("(hover:hover) and (pointer:fine)").matches && !REDUZ) {
+  const ring = $("ring"); let tx = 0, ty = 0, x = 0, y = 0, on = false, raf = 0;
+  const loop = () => {
+    x += (tx - x) * 0.22; y += (ty - y) * 0.22;
+    ring.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px)";
+    raf = (Math.abs(tx - x) > 0.2 || Math.abs(ty - y) > 0.2) ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener("pointermove", (e) => {
+    tx = e.clientX; ty = e.clientY;
+    if (!on) { on = true; x = tx; y = ty; ring.classList.add("on"); }
+    ring.classList.toggle("big", !!(e.target.closest && e.target.closest("button,a,input[type=range]")));
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+  document.documentElement.addEventListener("mouseleave", () => { on = false; ring.classList.remove("on"); });
+}
+
+/* barra fixa do celular some quando o resultado já está na tela */
+if ("IntersectionObserver" in window) {
+  const vis = new Set();
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => (e.isIntersecting ? vis.add(e.target.id) : vis.delete(e.target.id)));
+    $("dock").classList.toggle("off", vis.size > 0);
+  }, { threshold: 0.25 });
+  ["numbox", "verdict"].forEach((id) => io.observe($(id)));
+}
+
+render();
+</script>
+</body>
+</html>
