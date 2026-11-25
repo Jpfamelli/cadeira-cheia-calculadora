@@ -25,8 +25,9 @@
   --bg:#FAFAF9; --ink:#111; --mut:#555; --mut2:#666; --hair:#DDDCD8; --blue:#1F4BFF;
   --ok:#0A7A3E; --edge:#B26A00; --no:#C9281A;
   --f:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --pad:clamp(20px,5vw,84px);
+  --pad:clamp(20px,5vw,84px); --th:22px;
 }
+@media(pointer:coarse){:root{--th:28px}}
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
@@ -77,8 +78,10 @@ input[type=range]{--p:50%;display:block;width:100%;height:28px;margin:2px 0 0;ba
 input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:linear-gradient(to right,var(--ink) var(--p),#C9C8C3 var(--p))}
 input[type=range]::-moz-range-track{height:2px;border-radius:1px;background:#C9C8C3}
 input[type=range]::-moz-range-progress{height:2px;border-radius:1px;background:var(--ink)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;box-sizing:border-box;width:22px;height:22px;margin-top:-10px;border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink);transition:transform .15s}
-input[type=range]::-moz-range-thumb{box-sizing:border-box;width:22px;height:22px;border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;box-sizing:border-box;width:var(--th);height:var(--th);margin-top:calc((2px - var(--th)) / 2);border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink);transition:transform .15s}
+input[type=range]::-moz-range-thumb{box-sizing:border-box;width:var(--th);height:var(--th);border-radius:50%;background:var(--ink);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--ink)}
+.rng{position:relative;display:flow-root}
+.band{position:absolute;top:calc(50% + 1px);transform:translateY(-50%);height:12px;border-radius:6px;background:rgba(31,75,255,.14);left:calc(var(--th) / 2 + (100% - var(--th)) * .375);width:calc((100% - var(--th)) * .25);pointer-events:none}
 input[type=range]:hover::-webkit-slider-thumb,input[type=range]:active::-webkit-slider-thumb{transform:scale(1.2)}
 input[type=range]:focus-visible{outline-offset:2px;border-radius:6px}
 
@@ -136,7 +139,10 @@ dl.facts dd{font-weight:300;font-size:26px;line-height:1.1;letter-spacing:-.03em
 .btn:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-2px)}
 .btn.ghost{background:transparent;color:var(--ink)}
 .btn.ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-.note{font-size:14px;color:var(--mut2);margin-top:16px;max-width:72ch}
+.tools{display:flex;flex-wrap:wrap;gap:0 26px;margin-top:14px}
+.lnk{font:inherit;font-size:15px;color:var(--ink);background:none;border:0;padding:10px 0;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;transition:color .15s}
+.lnk:hover{color:var(--blue)}
+.note{font-size:14px;color:var(--mut2);margin-top:12px;max-width:72ch}
 
 /* ===== COMO FUNCIONA ===== */
 .how{margin:0 var(--pad);border-top:1px solid var(--ink);padding:48px 0}@media(min-width:900px){.how{padding:90px 0}}
@@ -188,6 +194,18 @@ footer p{max-width:84ch;margin-bottom:8px}
   .ring.on{opacity:1}
   .ring.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:#fff}
 }
+/* ===== IMPRESSÃO / SALVAR EM PDF ===== */
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:14mm}
+  body{padding-bottom:0}
+  .ring,.dock,.tools,.cta,.faq,.how,.wk,.band,input[type=range]{display:none!important}
+  .rise,.js .rv{opacity:1!important;transform:none!important;animation:none!important}
+  .hero{grid-template-columns:1fr;grid-template-areas:"head" "num" "ctrl" "agenda";padding-bottom:20px}
+  .ed input{border-bottom:0}
+  .vd,.hero{break-inside:avoid}
+  .note{display:none}
+}
 @media(prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
   .rise{opacity:1;transform:none}
@@ -218,8 +236,8 @@ footer p{max-width:84ch;margin-bottom:8px}
     </div>
     <div class="row">
       <div class="rh"><label for="taxa">Pacientes que faltam</label><span class="ed"><input id="n-taxa" type="text" inputmode="numeric" autocomplete="off" value="22" aria-label="Percentual de pacientes que faltam, valor exato" title="Toque para digitar o valor exato"><i>%</i></span></div>
-      <input type="range" id="taxa" min="5" max="45" step="1" value="22">
-      <small>No Brasil, estima-se entre 20% e 30%. Sem dado seu, use 22%.</small>
+      <div class="rng"><i class="band" aria-hidden="true"></i><input type="range" id="taxa" min="5" max="45" step="1" value="22"></div>
+      <small>No Brasil, estima-se entre 20% e 30% (a faixa azul). Sem dado seu, use 22%.</small>
     </div>
     <div class="row">
       <div class="rh"><label for="val">Receita média por horário</label><span class="ed"><i>R$&nbsp;</i><input id="n-val" type="text" inputmode="numeric" autocomplete="off" value="200" aria-label="Receita média por horário em reais, valor exato" title="Toque para digitar o valor exato"></span></div>
@@ -279,8 +297,12 @@ footer p{max-width:84ch;margin-bottom:8px}
 
   <div class="cta">
     <a class="btn" id="wa" href="#" rel="noopener">Quero medir minha clínica em 14 dias</a>
-    <button class="btn ghost" id="copy" type="button">Copiar o resumo</button>
-    <button class="btn ghost" id="copylink" type="button">Copiar link com meus números</button>
+  </div>
+  <div class="tools">
+    <button class="lnk" id="copy" type="button">Copiar o resumo</button>
+    <button class="lnk" id="copylink" type="button">Copiar link com meus números</button>
+    <button class="lnk" id="share" type="button" hidden>Compartilhar</button>
+    <button class="lnk" id="pdf" type="button">Salvar em PDF</button>
   </div>
   <p class="note" id="nota">O piloto é pago e devolvido se o extrato de receita recuperada não passar do que você pagou. Ao tocar no botão, abre o seu WhatsApp com a conta já escrita. Nenhum dado seu é enviado por esta página.</p>
 </section>
@@ -576,6 +598,13 @@ async function copiar(btn, texto, rotulo) {
 }
 $("copy").addEventListener("click", () => copiar($("copy"), render.resumo, "Copiar o resumo"));
 $("copylink").addEventListener("click", () => copiar($("copylink"), linkAtual(), "Copiar link com meus números"));
+$("pdf").addEventListener("click", () => window.print());
+if (navigator.share && /^https?:/.test(location.protocol)) {
+  $("share").hidden = false;
+  $("share").addEventListener("click", () => {
+    navigator.share({ title: "Quanto custam as faltas na minha agenda", text: "Calculadora Cadeira Cheia, com os meus números.", url: linkAtual() }).catch(() => {});
+  });
+}
 $("wa").addEventListener("click", (e) => {
   if (!CONFIG.whatsapp) { e.preventDefault(); $("copy").click(); $("nota").textContent = "Resumo copiado. Envie para a gente pelo WhatsApp e marcamos o piloto de 14 dias."; }
 });
