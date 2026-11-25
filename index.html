@@ -93,8 +93,13 @@ input[type=range]:focus-visible{outline-offset:2px;border-radius:6px}
 .cb{padding:6px 0 10px}
 .cb label{display:block;font-size:14px;color:var(--mut);margin-bottom:8px}
 .cb .ed{font-size:28px}
+.cb .ed input{text-align:left}
 .cb .cbr{font-size:14px;color:var(--mut);margin-top:8px;min-height:1.4em}
 .row .lnk{margin-top:2px}
+#n-fat{width:6ch}
+a.lnk{display:inline-block}
+.slots{font-size:15px;line-height:1.5;color:var(--mut);margin:0 0 22px;max-width:56ch}
+.slots b{color:var(--ink);font-weight:500}
 .prt{display:none}
 .recbox{padding-top:22px}
 .recbox .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:18px}
@@ -205,7 +210,7 @@ footer p{max-width:84ch;margin-bottom:8px}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{margin:14mm}
   body{padding-bottom:0}
-  .ring,.dock,.tools,.cta,.faq,.how,.wk,.band,input[type=range],#reset,#calc-t,#calc-box{display:none!important}
+  .ring,.dock,.tools,.cta,.faq,.how,.wk,.band,input[type=range],#reset,#calc-t,#calc-box,#calc-v,#calc-vbox{display:none!important}
   .prt{display:block;margin:12px var(--pad) 0;font-size:12px;color:#555;word-break:break-all}
   .rise,.js .rv{opacity:1!important;transform:none!important;animation:none!important}
   .hero{grid-template-columns:1fr;grid-template-areas:"head" "num" "ctrl" "agenda";padding-bottom:20px}
@@ -260,6 +265,12 @@ footer p{max-width:84ch;margin-bottom:8px}
       <div class="rh"><label for="val">Receita média por horário</label><span class="ed"><i>R$&nbsp;</i><input id="n-val" type="text" inputmode="numeric" autocomplete="off" value="200" aria-label="Receita média por horário em reais, valor exato" title="Toque para digitar o valor exato"></span></div>
       <input type="range" id="val" min="80" max="500" step="10" value="200">
       <small>Quanto a clínica fatura, em média, em uma cadeira por consulta.</small>
+      <button class="lnk" id="calc-v" type="button" aria-expanded="false" aria-controls="calc-vbox">Não sei esse valor</button>
+      <div class="cb" id="calc-vbox" hidden>
+        <label for="n-fat">Quanto a clínica faturou no último mês?</label>
+        <span class="ed"><i>R$&nbsp;</i><input id="n-fat" type="text" inputmode="numeric" autocomplete="off" placeholder="46800" aria-describedby="cv-res"></span>
+        <p class="cbr" id="cv-res" aria-live="polite"></p>
+      </div>
     </div>
     <div class="row">
       <div class="rh"><span class="lb" id="lb-cad">Cadeiras</span></div>
@@ -304,6 +315,7 @@ footer p{max-width:84ch;margin-bottom:8px}
         <div class="track"><i id="f-preco" style="width:0"></i><span class="lim" aria-hidden="true"></span></div>
       </div>
       <p class="barnote" id="barnote">As duas barras usam a mesma escala. A linha marca 15% do que dá para recuperar: acima disso, a conta deixa de ser óbvia.</p>
+      <p class="slots" id="slots"></p>
       <dl class="facts">
         <dt>Plano indicado</dt><dd id="d-plano">—</dd>
         <dt>Mensalidade ÷ recuperável</dt><dd id="d-ratio">—</dd>
@@ -321,6 +333,7 @@ footer p{max-width:84ch;margin-bottom:8px}
   <div class="tools">
     <button class="lnk" id="copy" type="button">Copiar o resumo</button>
     <button class="lnk" id="copylink" type="button">Copiar link com meus números</button>
+    <a class="lnk" id="mail" href="mailto:">Enviar por e-mail</a>
     <button class="lnk" id="share" type="button" hidden>Compartilhar</button>
     <button class="lnk" id="pdf" type="button">Salvar em PDF</button>
   </div>
@@ -441,9 +454,13 @@ function render() {
     $("vt").textContent = "Clínicas com 4 ou mais cadeiras pedem outro desenho.";
     $("vp").textContent = "Hoje o produto é feito para clínicas de dono operador, de 1 a 3 cadeiras. Fale com a gente se quiser conversar sobre o seu caso.";
     $("d-plano").textContent = "sob consulta"; $("d-ratio").textContent = "—"; $("d-min").textContent = "—"; $("d-piloto").textContent = "—"; $("d-tmin").textContent = "—"; $("d-low").textContent = "—";
-    barPreco.hidden = true; $("barnote").hidden = true;
+    barPreco.hidden = true; $("barnote").hidden = true; $("slots").hidden = true;
   } else {
-    barPreco.hidden = false; $("barnote").hidden = false;
+    barPreco.hidden = false; $("barnote").hidden = false; $("slots").hidden = false;
+    /* a mesma conta em horários: quantas consultas recuperadas pagam a mensalidade e o piloto */
+    const hm = Math.ceil(c.preco / S.val), hp = Math.ceil(CONFIG.piloto / S.val);
+    const cr = (n) => "<b>" + n + "</b> " + (n === 1 ? "consulta recuperada" : "consultas recuperadas");
+    $("slots").innerHTML = "Em horários, pela receita média informada: a mensalidade equivale a " + cr(hm) + " por mês, e o piloto de " + BRL(CONFIG.piloto) + " a " + cr(hp) + ". A agenda tem <b>" + c.faltas + "</b> faltas por mês.";
     $("b-plano").textContent = "· plano " + c.plano;
     $("b-preco").textContent = BRL(c.preco) + "/mês";
     $("f-preco").style.width = Math.min(100, c.ratio * 100) + "%";
@@ -455,7 +472,7 @@ function render() {
     if (c.ratio <= CONFIG.limite) {
       cls = "ok"; txt = "cabe";
       $("vt").textContent = "A mensalidade fica abaixo de 15% do que a clínica pode recuperar.";
-      $("vp").textContent = "Com esses números, o plano " + c.plano + " custaria " + PCT(c.ratio) + " do que estimamos recuperar por mês. Vale medir a sua taxa real para confirmar.";
+      $("vp").textContent = "Com esses números, o plano " + c.plano + " custaria " + PCT(c.ratio) + " do que estimamos recuperar por mês. Pela estimativa, sobrariam cerca de " + BRL(c.recup - c.preco) + " por mês depois da mensalidade. Vale medir a sua taxa real para confirmar.";
     } else if (c.ratio <= CONFIG.borda) {
       cls = "edge"; txt = "no limite";
       $("vt").textContent = "Está perto do ponto em que a conta deixa de ser óbvia.";
@@ -485,6 +502,7 @@ function render() {
   wa.textContent = CTA[0];
   if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(render.resumo + " " + CTA[1]);
   else wa.href = "#";
+  $("mail").href = "mailto:?subject=" + encodeURIComponent("Quanto as faltas custam na nossa agenda") + "&body=" + encodeURIComponent(render.resumo);
 
   clearTimeout(liveT);
   liveT = setTimeout(() => { $("live").textContent = "As faltas custam " + BRL(c.perda) + " por mês, " + c.faltas + " horários vazios. Veredito: " + txt + "."; }, 500);
@@ -636,24 +654,58 @@ document.querySelectorAll("#seg button").forEach((b) => b.addEventListener("clic
   S.cad = +b.dataset.v; live = true; render();
 }));
 /* "Não sei a minha taxa": o número de faltas do mês passado vira o percentual */
-$("calc-t").addEventListener("click", () => {
-  const box = $("calc-box"), abre = box.hidden;
-  box.hidden = !abre; $("calc-t").setAttribute("aria-expanded", String(abre));
-  if (abre) $("n-fal").focus();
+/* Só aplica quando o resultado cabe na faixa do controle. Enquanto a pessoa digita (ou se o número não fecha),
+   o controle volta ao valor que tinha antes e o aviso só aparece depois de uma pausa. */
+function ajudante(o) {
+  const btn = $(o.btn), box = $(o.box), inp = $(o.inp), out = $(o.out);
+  let base = null, t = 0;
+  const volta = () => { if (base != null && S[o.key] !== base) { S[o.key] = base; render(); } };
+  btn.addEventListener("click", () => {
+    const abre = box.hidden;
+    box.hidden = !abre; btn.setAttribute("aria-expanded", String(abre));
+    if (abre) inp.focus();
+  });
+  inp.addEventListener("focus", () => { base = S[o.key]; });
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+  inp.addEventListener("input", () => {
+    inp.value = inp.value.replace(/\D/g, "").slice(0, o.max);
+    if (o.grow) inp.style.width = Math.max(o.grow, inp.value.length) + "ch";
+    clearTimeout(t);
+    const n = +inp.value;
+    if (!n) { out.textContent = ""; volta(); return; }
+    const r = o.calc(n), v = Math.round(r.v);
+    if (v >= LIM[o.key][0] && v <= LIM[o.key][1]) { S[o.key] = v; live = true; render(); out.textContent = r.ok; return; }
+    volta(); out.textContent = "";
+    t = setTimeout(() => { out.textContent = r.fora; }, 700);
+  });
+  return () => { clearTimeout(t); inp.value = ""; out.textContent = ""; base = null; };
+}
+const limpaTaxa = ajudante({
+  btn: "calc-t", box: "calc-box", inp: "n-fal", out: "cb-res", key: "taxa", max: 3,
+  calc: (n) => {
+    const real = n / S.cons * 100;
+    return {
+      v: real,
+      ok: "Isso dá " + PCT(real / 100) + " das " + S.cons + " consultas.",
+      fora: real > 100 ? "Mais faltas do que consultas no mês. Confira o número."
+        : "Isso dá " + PCT(real / 100) + " das " + S.cons + " consultas, fora da faixa de 5% a 45% que a calculadora cobre. Confira o número."
+    };
+  }
 });
-$("n-fal").addEventListener("input", (e) => {
-  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 3);
-  const f = +e.target.value, out = $("cb-res");
-  if (!f) { out.textContent = ""; return; }
-  const real = f / S.cons * 100;
-  if (real > 100) { out.textContent = "Mais faltas do que consultas no mês. Confira o número."; return; }
-  const t = Math.min(LIM.taxa[1], Math.max(LIM.taxa[0], Math.round(real)));
-  S.taxa = t; live = true; render();
-  out.textContent = "Isso dá " + PCT(real / 100) + " das " + S.cons + " consultas." + (t !== Math.round(real) ? " O controle vai de 5% a 45%, então usamos " + t + "%." : "");
+const limpaValor = ajudante({
+  btn: "calc-v", box: "calc-vbox", inp: "n-fat", out: "cv-res", key: "val", max: 7, grow: 6,
+  calc: (n) => {
+    const feitas = S.cons - Math.round(S.cons * S.taxa / 100), real = n / feitas;
+    return {
+      v: real,
+      ok: "Isso dá " + BRL(real) + " por horário, em " + feitas + " consultas realizadas.",
+      fora: "Isso dá " + BRL(real) + " por horário, fora da faixa de R$ 80 a R$ 500 que a calculadora cobre. Confira o número."
+    };
+  }
 });
 $("reset").addEventListener("click", () => {
   Object.assign(S, DEF); live = false;
-  $("n-fal").value = ""; $("cb-res").textContent = "";
+  limpaTaxa(); limpaValor();
   try { history.replaceState(null, "", location.pathname); } catch (e) { /* sem histórico: segue */ }
   render();
   $("cons").focus({ preventScroll: true });
