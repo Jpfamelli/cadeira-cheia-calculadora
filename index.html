@@ -10,7 +10,12 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="Quanto custam as faltas na sua agenda?">
 <meta property="og:description" content="Calculadora gratuita para clínicas odontológicas: veja em reais o que as faltas custam por mês. Os dados ficam no seu navegador.">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://jpfamelli.github.io/cadeira-cheia-calculadora/">
+<meta property="og:image" content="https://jpfamelli.github.io/cadeira-cheia-calculadora/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Quanto custam as faltas na sua agenda? Grade de pontos que representa as consultas do mês.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111'/%3E%3Ccircle cx='9' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%231F4BFF'/%3E%3Ccircle cx='23' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,6 +148,19 @@ dl.facts dd{font-weight:300;font-size:26px;line-height:1.1;letter-spacing:-.03em
 .steps h3{font-size:21px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em}
 .steps p{color:var(--mut);font-size:16.5px}
 
+/* ===== PERGUNTAS ===== */
+.faq{margin:0 var(--pad);border-top:1px solid var(--ink);padding:clamp(40px,7vw,90px) 0}
+.faq h2{font-weight:300;font-size:clamp(34px,4.8vw,66px);line-height:1.03;letter-spacing:-.04em;margin-bottom:clamp(24px,4vw,48px)}
+.faq details{max-width:920px;border-bottom:1px solid var(--hair)}
+.faq details:first-of-type{border-top:1px solid var(--ink)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:22px 0;font-size:21px;font-weight:500;letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:300;font-size:30px;line-height:1;flex:none;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--mut);font-size:17px;max-width:64ch;padding:0 0 26px}
+.wk{font-size:14px;color:var(--mut);margin-top:8px;min-height:1.5em}
+.wk b{color:var(--ink);font-weight:500}
+
 footer{margin:0 var(--pad);border-top:1px solid var(--hair);padding:28px 0 56px;font-size:13px;line-height:1.6;color:var(--mut)}
 footer p{max-width:84ch;margin-bottom:8px}
 
@@ -228,6 +246,7 @@ footer p{max-width:84ch;margin-bottom:8px}
   <div class="a-agenda rise">
     <canvas id="cv" width="900" height="320" role="img" aria-label="Agenda do mês: cada ponto é uma consulta. Os vazados são faltas e os azuis são horários recuperados."></canvas>
     <div class="legend"><span class="l-ok">compareceu</span><span class="l-falta">faltou</span><span class="l-rec">horário recuperado</span></div>
+    <p class="wk" id="wk" aria-hidden="true">Passe o mouse ou toque em uma semana para ver o detalhe.</p>
   </div>
 </section>
 
@@ -273,6 +292,14 @@ footer p{max-width:84ch;margin-bottom:8px}
     <div class="rv"><span>02</span><h3>Agimos em cada horário</h3><p>Confirmação ativa pelo WhatsApp oficial da própria clínica, vaga reocupada pela lista de espera e régua para quem faltou.</p></div>
     <div class="rv"><span>03</span><h3>Mostramos o extrato</h3><p>Cada real recuperado tem evidência e pode ser conferido linha a linha. Sem percentual mágico, sem promessa.</p></div>
   </div>
+</section>
+<section class="faq">
+  <h2 class="rv">Perguntas <b>rápidas</b></h2>
+  <details class="rv"><summary>De onde vem o 22% de faltas?</summary><p>É uma referência aproximada para você começar a conta, não um dado da sua clínica. A taxa muda muito de uma agenda para outra. Se você sabe o seu número, digite-o ao lado do controle. Se não sabe, medir é justamente o primeiro passo do piloto.</p></details>
+  <details class="rv"><summary>Por que o limite é 15%?</summary><p>É a regra que usamos: a mensalidade deve ficar abaixo de 15% do que estimamos que a clínica recupere. Acima disso, a conta deixa de ser óbvia, e a calculadora avisa em vez de empurrar o plano.</p></details>
+  <details class="rv"><summary>Meus números saem desta página?</summary><p>Não. A conta roda no seu navegador e nada é enviado. O link com os números só existe para você guardar ou mandar para alguém. O WhatsApp só abre quando você toca no botão, com o resumo que você mesmo vai enviar.</p></details>
+  <details class="rv"><summary>O que acontece nos 14 dias do piloto?</summary><p>Medimos a sua taxa de falta real, ligamos a confirmação pelo WhatsApp oficial da própria clínica e registramos cada horário recuperado em um extrato. O piloto custa R$ 497 e é devolvido se o extrato não mostrar mais receita recuperada do que você pagou.</p></details>
+  <details class="rv"><summary>Isso substitui o meu sistema de agenda?</summary><p>Não. A Cadeira Cheia não é prontuário nem agenda. Ela se conecta à agenda que você já usa e cuida só do comparecimento: confirma, preenche vagas e mede.</p></details>
 </section>
 </main>
 
@@ -420,9 +447,13 @@ const grid = (() => {
   const COLS = 20, PER = 5, WEEKS = 4;
   let cells = [], W = 900, H = 320, dpr = 1, geo = {}, mouse = { x: -999, y: -999 };
   let faltas = 0, rec = 0, total = 0, born = performance.now();
+  /* cada célula tem uma chave fixa; a ordem entre as `total` células visíveis decide quais faltam e quais voltam */
   const rank = []; let seed = 11;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  Array.from({ length: 700 }, (_, i) => i).sort(() => rnd() - 0.5).forEach((idx, r) => (rank[idx] = r));
+  const keys = Array.from({ length: 700 }, rnd);
+  function ordena() {
+    Array.from({ length: total }, (_, i) => i).sort((a, b) => keys[a] - keys[b]).forEach((idx, r) => (rank[idx] = r));
+  }
 
   function layout() {
     const rect = cv.getBoundingClientRect();
@@ -443,6 +474,7 @@ const grid = (() => {
   }
   function target(c) {
     total = S.cons; faltas = c.faltas; rec = Math.round(c.faltas * S.rec / 100);
+    ordena(); semana = -1;
     layout(); tickNumber(c.perda); start();
   }
   let raf = 0;
@@ -480,8 +512,30 @@ const grid = (() => {
     }
     if (moving) raf = requestAnimationFrame(draw);
   }
-  cv.addEventListener("pointermove", (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; start(); });
-  cv.addEventListener("pointerleave", () => { mouse.x = mouse.y = -999; start(); });
+  const DICA = "Passe o mouse ou toque em uma semana para ver o detalhe.";
+  let semana = -1;
+  function detalhe(x, y) {
+    let w = -1;
+    if (y >= geo.head && x >= 0) w = Math.min(WEEKS - 1, Math.floor(x / (geo.weekW + geo.gw)));
+    if (w === semana) return;
+    semana = w;
+    if (w < 0) { $("wk").textContent = DICA; return; }
+    let n = 0, f = 0, r = 0;
+    for (let i = 0; i < total; i++) {
+      if (Math.floor((i % COLS) / PER) !== w) continue;
+      n++;
+      if (rank[i] < rec) r++; else if (rank[i] < faltas) f++;
+    }
+    $("wk").innerHTML = "Semana " + (w + 1) + ": <b>" + n + "</b> consultas, <b>" + (f + r) + "</b> faltas, <b>" + r + "</b> recuperadas.";
+  }
+  const aponta = (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; detalhe(mouse.x, mouse.y); start(); };
+  cv.addEventListener("pointermove", aponta);
+  cv.addEventListener("pointerdown", aponta);
+  cv.addEventListener("pointerleave", (e) => {
+    mouse.x = mouse.y = -999; start();
+    if (e.pointerType === "touch") return; /* no toque o detalhe fica até a próxima semana tocada */
+    semana = -1; $("wk").textContent = DICA;
+  });
   window.addEventListener("resize", () => { layout(); start(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
   return { target };
