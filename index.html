@@ -6,6 +6,11 @@
 <meta name="theme-color" content="#FAFAF9">
 <title>Quanto custam as faltas · Cadeira Cheia</title>
 <meta name="description" content="Calculadora gratuita: veja em reais o que as faltas custam à sua clínica odontológica por mês e se faz sentido medir isso com a Cadeira Cheia.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Quanto custam as faltas na sua agenda?">
+<meta property="og:description" content="Calculadora gratuita para clínicas odontológicas: veja em reais o que as faltas custam por mês. Os dados ficam no seu navegador.">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111'/%3E%3Ccircle cx='9' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='9' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%231F4BFF'/%3E%3Ccircle cx='23' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='16' cy='23' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,9 +35,9 @@ header.top{display:flex;justify-content:space-between;align-items:baseline;gap:1
 header.top span{color:var(--mut);font-weight:400}
 
 /* ===== HERO ===== */
-.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"head ctrl" "num ctrl" "agenda ctrl";grid-template-rows:auto auto 1fr;column-gap:clamp(40px,6vw,100px);padding:clamp(28px,5vh,56px) var(--pad) clamp(40px,7vh,72px);align-items:start}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"head ctrl" "num ctrl" "agenda ctrl";grid-template-rows:auto auto 1fr;column-gap:clamp(40px,6vw,100px);padding:clamp(24px,3.6vh,48px) var(--pad) clamp(40px,7vh,72px);align-items:start}
 @media(max-width:960px){.hero{grid-template-columns:1fr;grid-template-areas:"head" "num" "ctrl" "agenda"}}
-.a-head{grid-area:head}.a-num{grid-area:num}.a-ctrl{grid-area:ctrl}.a-agenda{grid-area:agenda;margin-top:22px;width:100%}
+.a-head{grid-area:head}.a-num{grid-area:num}.a-ctrl{grid-area:ctrl}.a-agenda{grid-area:agenda;margin-top:16px;width:100%}
 
 h1{font-weight:300;font-size:clamp(36px,4.6vw,66px);line-height:1.02;letter-spacing:-.04em;max-width:16ch}
 h1 b{font-weight:600}
@@ -40,7 +45,7 @@ h1 b{font-weight:600}
 @keyframes rise{to{opacity:1;transform:none}}
 .a-num{animation-delay:.1s}
 
-.k{font-size:15px;color:var(--mut);margin-top:clamp(18px,3vh,32px)}
+.k{font-size:15px;color:var(--mut);margin-top:clamp(14px,2vh,24px)}
 .num{container-type:inline-size;margin:2px 0 4px}
 .num>div{display:flex;align-items:flex-start;gap:.06em;font-weight:300;line-height:.92;letter-spacing:-.065em;font-variant-numeric:tabular-nums;
   font-size:clamp(84px,12vw,190px);font-size:min(30cqi,230px)}
@@ -48,7 +53,7 @@ h1 b{font-weight:600}
 .num[data-l="5"]>div,.num[data-l="4"]>div,.num[data-l="3"]>div{font-size:min(36cqi,230px)}
 .num small{font-size:.22em;font-weight:400;letter-spacing:0;margin-top:.22em;margin-right:.12em}
 .num b{font-weight:inherit}
-.sub{font-size:18px;color:var(--mut);max-width:48ch}
+.sub{font-size:18px;color:var(--mut);max-width:62ch}
 .sub b{color:var(--ink);font-weight:500;white-space:nowrap}
 
 /* controles */
@@ -57,6 +62,11 @@ h1 b{font-weight:600}
 .rh{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
 .rh label,.rh .lb{font-size:15px;color:var(--mut);font-weight:400}
 output{font-weight:300;font-size:36px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.ed{display:inline-flex;align-items:baseline;font-weight:300;font-size:36px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ed i{font-style:normal}
+.ed input{font:inherit;letter-spacing:inherit;color:inherit;background:transparent;border:0;border-bottom:1px solid var(--hair);border-radius:0;padding:0 0 3px;margin:0;text-align:right;width:3ch;min-width:0;outline:0;transition:border-color .15s}
+.ed input:hover{border-bottom-color:#9a9994}
+.ed input:focus{border-bottom:2px solid var(--blue);padding-bottom:2px}
 .row small{display:block;font-size:13px;color:var(--mut2);margin-top:2px;line-height:1.4}
 input[type=range]{--p:50%;display:block;width:100%;height:28px;margin:2px 0 0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
 input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:linear-gradient(to right,var(--ink) var(--p),#C9C8C3 var(--p))}
@@ -101,7 +111,8 @@ canvas{display:block;width:100%;height:auto}
 
 .bar{margin-bottom:26px}
 .bl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:15px;color:var(--mut)}
-.bl b{font-weight:300;font-size:32px;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.bl b{font-weight:300;font-size:32px;letter-spacing:-.04em;line-height:1;color:var(--ink);white-space:nowrap}
+@media(max-width:480px){.bl b{font-size:28px}}
 .bl em{font-style:normal}
 .track{position:relative;height:10px;border-radius:5px;background:#E7E6E2}
 .track i{position:absolute;inset:0 auto 0 0;border-radius:5px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
@@ -146,6 +157,12 @@ footer p{max-width:84ch;margin-bottom:8px}
   .dock .tag{margin:0;font-size:14px}
 }
 
+/* ===== ENTRADA SUAVE AO ROLAR ===== */
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+.js .steps>.rv:nth-child(2){transition-delay:.12s}
+.js .steps>.rv:nth-child(3){transition-delay:.24s}
+
 /* ===== CURSOR ===== */
 .ring{display:none}
 @media(hover:hover) and (pointer:fine){
@@ -172,22 +189,22 @@ footer p{max-width:84ch;margin-bottom:8px}
   <div class="a-num rise">
     <p class="k">Por mês, em horários que ficaram vazios</p>
     <div class="num" id="numbox" data-l="6" aria-hidden="true"><div><small>R$</small><b id="perda">0</b></div></div>
-    <p class="sub">São <b id="nfaltas">0</b> horários vazios por mês. Em um ano, <b id="ano">R$ 0</b>.</p>
+    <p class="sub">São <b id="nfaltas">0</b> horários vazios por mês. Em um ano, <b id="ano">R$ 0</b>. Cada ponto a mais na taxa de falta custa <b id="ponto">R$ 0</b> por mês.</p>
     <p class="sr" id="live" aria-live="polite"></p>
   </div>
 
   <form class="a-ctrl rise" id="f" onsubmit="return false" aria-label="Dados da clínica">
     <div class="row">
-      <div class="rh"><label for="cons">Consultas por mês</label><output id="o-cons" for="cons">300</output></div>
+      <div class="rh"><label for="cons">Consultas por mês</label><span class="ed"><input id="n-cons" type="text" inputmode="numeric" autocomplete="off" value="300" aria-label="Consultas por mês, valor exato" title="Toque para digitar o valor exato"></span></div>
       <input type="range" id="cons" min="80" max="700" step="10" value="300">
     </div>
     <div class="row">
-      <div class="rh"><label for="taxa">Pacientes que faltam</label><output id="o-taxa" for="taxa">22%</output></div>
+      <div class="rh"><label for="taxa">Pacientes que faltam</label><span class="ed"><input id="n-taxa" type="text" inputmode="numeric" autocomplete="off" value="22" aria-label="Percentual de pacientes que faltam, valor exato" title="Toque para digitar o valor exato"><i>%</i></span></div>
       <input type="range" id="taxa" min="5" max="45" step="1" value="22">
       <small>No Brasil, estima-se entre 20% e 30%. Sem dado seu, use 22%.</small>
     </div>
     <div class="row">
-      <div class="rh"><label for="val">Receita média por horário</label><output id="o-val" for="val">R$ 200</output></div>
+      <div class="rh"><label for="val">Receita média por horário</label><span class="ed"><i>R$&nbsp;</i><input id="n-val" type="text" inputmode="numeric" autocomplete="off" value="200" aria-label="Receita média por horário em reais, valor exato" title="Toque para digitar o valor exato"></span></div>
       <input type="range" id="val" min="80" max="500" step="10" value="200">
       <small>Quanto a clínica fatura, em média, em uma cadeira por consulta.</small>
     </div>
@@ -217,12 +234,12 @@ footer p{max-width:84ch;margin-bottom:8px}
 <section class="vd" id="verdict">
   <p class="eyebrow">O veredito, com os seus números</p>
   <div class="vgrid">
-    <div>
+    <div class="rv">
       <span class="tag" id="tag">cabe</span>
       <h2 id="vt"></h2>
       <p class="vp" id="vp"></p>
     </div>
-    <div>
+    <div class="rv">
       <div class="bar">
         <div class="bl"><span>Dá para recuperar por mês</span><b id="b-rec">R$ 0</b></div>
         <div class="track"><i id="f-rec"></i></div>
@@ -244,16 +261,17 @@ footer p{max-width:84ch;margin-bottom:8px}
   <div class="cta">
     <a class="btn" id="wa" href="#" rel="noopener">Quero medir minha clínica em 14 dias</a>
     <button class="btn ghost" id="copy" type="button">Copiar o resumo</button>
+    <button class="btn ghost" id="copylink" type="button">Copiar link com meus números</button>
   </div>
   <p class="note" id="nota">O piloto é pago e devolvido se o extrato de receita recuperada não passar do que você pagou. Ao tocar no botão, abre o seu WhatsApp com a conta já escrita. Nenhum dado seu é enviado por esta página.</p>
 </section>
 
 <section class="how">
-  <h2>Não prometemos um percentual. <b>Medimos o seu.</b></h2>
+  <h2 class="rv">Não prometemos um percentual. <b>Medimos o seu.</b></h2>
   <div class="steps">
-    <div><span>01</span><h3>Medimos antes</h3><p>Levantamos a sua taxa de falta real, com intervalo de confiança. Sem número de antes, não existe número de depois.</p></div>
-    <div><span>02</span><h3>Agimos em cada horário</h3><p>Confirmação ativa pelo WhatsApp oficial da própria clínica, vaga reocupada pela lista de espera e régua para quem faltou.</p></div>
-    <div><span>03</span><h3>Mostramos o extrato</h3><p>Cada real recuperado tem evidência e pode ser conferido linha a linha. Sem percentual mágico, sem promessa.</p></div>
+    <div class="rv"><span>01</span><h3>Medimos antes</h3><p>Levantamos a sua taxa de falta real, com intervalo de confiança. Sem número de antes, não existe número de depois.</p></div>
+    <div class="rv"><span>02</span><h3>Agimos em cada horário</h3><p>Confirmação ativa pelo WhatsApp oficial da própria clínica, vaga reocupada pela lista de espera e régua para quem faltou.</p></div>
+    <div class="rv"><span>03</span><h3>Mostramos o extrato</h3><p>Cada real recuperado tem evidência e pode ser conferido linha a linha. Sem percentual mágico, sem promessa.</p></div>
   </div>
 </section>
 </main>
@@ -283,7 +301,20 @@ const BRL = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
 const PCT = (r) => (r * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
 const S = { cons: 300, taxa: 22, val: 200, cad: 1, rec: 30 };
 const REDUZ = matchMedia("(prefers-reduced-motion: reduce)").matches;
-let shown = 0;
+let shown = 0, live = false;
+
+/* ===== ESTADO NA URL (link com os números de quem usou) ===== */
+const KEYS = { cons: "c", taxa: "f", val: "v", cad: "k", rec: "r" };
+const LIM = { cons: [80, 700], taxa: [5, 45], val: [80, 500], cad: [1, 4], rec: [20, 45] };
+function parametros() { const q = new URLSearchParams(); for (const k in KEYS) q.set(KEYS[k], S[k]); return q.toString(); }
+function linkAtual() { return location.href.split(/[?#]/)[0] + "?" + parametros(); }
+(function lerUrl() {
+  const q = new URLSearchParams(location.search);
+  for (const k in KEYS) {
+    const v = parseInt(q.get(KEYS[k]), 10);
+    if (Number.isFinite(v)) S[k] = Math.min(LIM[k][1], Math.max(LIM[k][0], k === "rec" ? Math.round(v / 5) * 5 : v));
+  }
+})();
 
 /* ===== CÁLCULO ===== */
 function calc() {
@@ -303,10 +334,15 @@ function calc() {
 let liveT = 0;
 function render() {
   const c = calc();
-  $("o-cons").textContent = S.cons;
-  $("o-taxa").textContent = S.taxa + "%";
-  $("o-val").textContent = BRL(S.val);
+  ["cons", "taxa", "val"].forEach((id) => {
+    const n = $("n-" + id);
+    if (document.activeElement !== n) n.value = S[id];
+    n.style.width = Math.max(2, n.value.length) + "ch";
+  });
+  ["cons", "taxa", "val", "rec"].forEach((id) => { if (+$(id).value !== S[id]) $(id).value = S[id]; });
+  document.querySelectorAll("#seg button").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === S.cad));
   $("o-rec").textContent = S.rec + "%";
+  $("ponto").textContent = BRL(S.cons * S.val / 100);
   $("nfaltas").textContent = c.faltas;
   $("ano").textContent = BRL(c.perda * 12);
   $("recv").textContent = BRL(c.recup);
@@ -352,9 +388,10 @@ function render() {
 
   const resumo = "Calculadora Cadeira Cheia: " + S.cons + " consultas/mês, " + S.taxa + "% de falta, " + BRL(S.val) + " por horário, " + S.cad + (S.cad === 4 ? "+ cadeiras" : S.cad === 1 ? " cadeira" : " cadeiras") +
     ". Perda estimada: " + BRL(c.perda) + "/mês (" + BRL(c.perda * 12) + "/ano). Recuperável (" + S.rec + "%): " + BRL(c.recup) + "/mês.";
-  render.resumo = resumo;
+  render.resumo = resumo + (/^https?:/.test(location.protocol) ? " Meus números: " + linkAtual() : "");
+  if (live) { try { history.replaceState(null, "", "?" + parametros()); } catch (e) { /* sem histórico: segue */ } }
   const wa = $("wa");
-  if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(resumo + " Quero medir a minha clínica no piloto de 14 dias.");
+  if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(render.resumo + " Quero medir a minha clínica no piloto de 14 dias.");
   else wa.href = "#";
 
   clearTimeout(liveT);
@@ -395,7 +432,7 @@ const grid = (() => {
     const pitch = (W - (WEEKS - 1) * gw) / COLS;
     const rows = Math.max(1, Math.ceil(total / COLS));
     const maxH = small ? 340 : 400;
-    const py = Math.min(pitch, 22, maxH / rows);
+    const py = Math.min(pitch, 19, maxH / rows);
     const d = Math.max(4.5, Math.min(11, Math.min(pitch, py) * 0.6));
     H = head + rows * py + 4;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + "px";
@@ -452,17 +489,39 @@ const grid = (() => {
 
 /* ===== EVENTOS ===== */
 ["cons", "taxa", "val", "rec"].forEach((id) =>
-  $(id).addEventListener("input", (e) => { S[id] = +e.target.value; render(); }));
-document.querySelectorAll("#seg button").forEach((b) => b.addEventListener("click", () => {
-  S.cad = +b.dataset.v;
-  document.querySelectorAll("#seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
-  render();
-}));
-$("copy").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(render.resumo); $("copy").textContent = "Copiado ✓"; }
-  catch (e) { prompt("Copie o resumo:", render.resumo); }
-  setTimeout(() => ($("copy").textContent = "Copiar o resumo"), 1800);
+  $(id).addEventListener("input", (e) => { S[id] = +e.target.value; live = true; render(); }));
+/* digitar o valor exato ao lado do controle */
+["cons", "taxa", "val"].forEach((id) => {
+  const n = $("n-" + id), lo = LIM[id][0], hi = LIM[id][1];
+  const fixa = () => { let v = +n.value.replace(/\D/g, ""); if (!v) v = S[id]; S[id] = Math.min(hi, Math.max(lo, v)); n.value = S[id]; live = true; render(); };
+  n.addEventListener("input", () => {
+    n.value = n.value.replace(/\D/g, "").slice(0, 4);
+    const v = +n.value;
+    if (n.value && v >= lo && v <= hi) { S[id] = v; live = true; render(); }
+    else n.style.width = Math.max(2, n.value.length) + "ch";
+  });
+  n.addEventListener("change", fixa);
+  n.addEventListener("blur", fixa);
+  n.addEventListener("focus", () => n.select());
+  n.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); n.blur(); }
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      S[id] = Math.min(hi, Math.max(lo, S[id] + (e.key === "ArrowUp" ? 1 : -1)));
+      n.value = S[id]; live = true; render();
+    }
+  });
 });
+document.querySelectorAll("#seg button").forEach((b) => b.addEventListener("click", () => {
+  S.cad = +b.dataset.v; live = true; render();
+}));
+async function copiar(btn, texto, rotulo) {
+  try { await navigator.clipboard.writeText(texto); btn.textContent = "Copiado ✓"; }
+  catch (e) { prompt("Copie:", texto); }
+  setTimeout(() => (btn.textContent = rotulo), 1800);
+}
+$("copy").addEventListener("click", () => copiar($("copy"), render.resumo, "Copiar o resumo"));
+$("copylink").addEventListener("click", () => copiar($("copylink"), linkAtual(), "Copiar link com meus números"));
 $("wa").addEventListener("click", (e) => {
   if (!CONFIG.whatsapp) { e.preventDefault(); $("copy").click(); $("nota").textContent = "Resumo copiado. Envie para a gente pelo WhatsApp e marcamos o piloto de 14 dias."; }
 });
@@ -492,6 +551,15 @@ if ("IntersectionObserver" in window) {
     $("dock").classList.toggle("off", vis.size > 0);
   }, { threshold: 0.25 });
   ["numbox", "verdict"].forEach((id) => io.observe($(id)));
+}
+
+/* blocos do veredito e do "como funciona" entram ao rolar */
+if (!REDUZ && "IntersectionObserver" in window) {
+  document.documentElement.classList.add("js");
+  const io2 = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io2.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".rv").forEach((el) => io2.observe(el));
 }
 
 render();
