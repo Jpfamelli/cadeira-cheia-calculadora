@@ -90,6 +90,12 @@ input[type=range]:focus-visible{outline-offset:2px;border-radius:6px}
 .seg button:hover{background:#ECEBE7}
 .seg button[aria-pressed=true]{background:var(--ink);color:#fff}
 
+.cb{padding:6px 0 10px}
+.cb label{display:block;font-size:14px;color:var(--mut);margin-bottom:8px}
+.cb .ed{font-size:28px}
+.cb .cbr{font-size:14px;color:var(--mut);margin-top:8px;min-height:1.4em}
+.row .lnk{margin-top:2px}
+.prt{display:none}
 .recbox{padding-top:22px}
 .recbox .tot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:18px}
 .recbox .tot span{font-size:15px;color:var(--mut)}
@@ -199,7 +205,8 @@ footer p{max-width:84ch;margin-bottom:8px}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{margin:14mm}
   body{padding-bottom:0}
-  .ring,.dock,.tools,.cta,.faq,.how,.wk,.band,input[type=range]{display:none!important}
+  .ring,.dock,.tools,.cta,.faq,.how,.wk,.band,input[type=range],#reset,#calc-t,#calc-box{display:none!important}
+  .prt{display:block;margin:12px var(--pad) 0;font-size:12px;color:#555;word-break:break-all}
   .rise,.js .rv{opacity:1!important;transform:none!important;animation:none!important}
   .hero{grid-template-columns:1fr;grid-template-areas:"head" "num" "ctrl" "agenda";padding-bottom:20px}
   .ed input{border-bottom:0}
@@ -219,6 +226,7 @@ footer p{max-width:84ch;margin-bottom:8px}
 <div class="ring" id="ring" aria-hidden="true"></div>
 
 <header class="top"><b>Cadeira Cheia</b><span>Calculadora gratuita · 1 minuto</span></header>
+<p class="prt" id="prt"></p>
 
 <noscript><p style="margin:32px var(--pad);font-size:18px">Esta calculadora precisa de JavaScript para fazer a conta no seu navegador. Ative o JavaScript e recarregue a página.</p></noscript>
 <main>
@@ -241,6 +249,12 @@ footer p{max-width:84ch;margin-bottom:8px}
       <div class="rh"><label for="taxa">Pacientes que faltam</label><span class="ed"><input id="n-taxa" type="text" inputmode="numeric" autocomplete="off" value="22" aria-label="Percentual de pacientes que faltam, valor exato" title="Toque para digitar o valor exato"><i>%</i></span></div>
       <div class="rng"><i class="band" aria-hidden="true"></i><input type="range" id="taxa" min="5" max="45" step="1" value="22"></div>
       <small>No Brasil, estima-se entre 20% e 30% (a faixa azul). Sem dado seu, use 22%.</small>
+      <button class="lnk" id="calc-t" type="button" aria-expanded="false" aria-controls="calc-box">Não sei a minha taxa</button>
+      <div class="cb" id="calc-box" hidden>
+        <label for="n-fal">Quantos pacientes faltaram no último mês?</label>
+        <span class="ed"><input id="n-fal" type="text" inputmode="numeric" autocomplete="off" placeholder="66" aria-describedby="cb-res"></span>
+        <p class="cbr" id="cb-res" aria-live="polite"></p>
+      </div>
     </div>
     <div class="row">
       <div class="rh"><label for="val">Receita média por horário</label><span class="ed"><i>R$&nbsp;</i><input id="n-val" type="text" inputmode="numeric" autocomplete="off" value="200" aria-label="Receita média por horário em reais, valor exato" title="Toque para digitar o valor exato"></span></div>
@@ -262,6 +276,7 @@ footer p{max-width:84ch;margin-bottom:8px}
       <div class="tot"><span>Receita recuperável por mês</span><b id="recv">R$ 0</b></div>
       <p>Hipótese de trabalho, não promessa: o resultado depende da sua agenda, dos seus pacientes e de como a recepção usa o sistema. Por isso o primeiro passo é medir o seu número real.</p>
     </div>
+    <button class="lnk" id="reset" type="button" hidden>Voltar aos valores de exemplo</button>
   </form>
 
   <div class="a-agenda rise">
@@ -293,6 +308,8 @@ footer p{max-width:84ch;margin-bottom:8px}
         <dt>Plano indicado</dt><dd id="d-plano">—</dd>
         <dt>Mensalidade ÷ recuperável</dt><dd id="d-ratio">—</dd>
         <dt>Perda mensal mínima para fazer sentido</dt><dd id="d-min">—</dd>
+        <dt>Taxa de falta mínima, com essa agenda</dt><dd id="d-tmin">—</dd>
+        <dt id="t-low">Mensalidade ÷ recuperável, se só 20%</dt><dd id="d-low">—</dd>
         <dt>Piloto de 14 dias (R$ 497)</dt><dd id="d-piloto">—</dd>
       </dl>
     </div>
@@ -352,6 +369,7 @@ const $ = (id) => document.getElementById(id);
 const BRL = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
 const PCT = (r) => (r * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
 const S = { cons: 300, taxa: 22, val: 200, cad: 1, rec: 30 };
+const DEF = Object.assign({}, S);
 const REDUZ = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let shown = 0, live = false;
 
@@ -379,7 +397,9 @@ function calc() {
   const ratio = preco ? preco / recup : null;
   const min = preco ? preco / CONFIG.limite / (S.rec / 100) : null;
   const piloto = perda * 14 / 30 * S.rec / 100;
-  return { faltas, perda, recup, plano, preco, ratio, min, piloto };
+  const tmin = preco ? min / (S.cons * S.val) * 100 : null;   /* taxa de falta que deixa a mensalidade em 15% */
+  const low = preco ? preco / (perda * 0.2) : null;           /* mesma conta no cenário mais fraco (recupera só 20%) */
+  return { faltas, perda, recup, plano, preco, ratio, min, piloto, tmin, low };
 }
 
 /* ===== TEXTO ===== */
@@ -403,6 +423,15 @@ function render() {
   $("d-piloto").textContent = "≈ " + BRL(c.piloto);
   $("numbox").dataset.l = Math.min(7, Math.max(3, c.perda.toLocaleString("pt-BR").length));
   document.querySelectorAll("input[type=range]").forEach((el) => el.style.setProperty("--p", ((el.value - el.min) / (el.max - el.min) * 100) + "%"));
+  /* leitores de tela: o valor falado de cada controle, com unidade */
+  $("cons").setAttribute("aria-valuetext", S.cons + " consultas por mês");
+  $("taxa").setAttribute("aria-valuetext", S.taxa + " por cento de faltas");
+  $("val").setAttribute("aria-valuetext", S.val + " reais por horário");
+  $("rec").setAttribute("aria-valuetext", S.rec + " por cento recuperável");
+  $("reset").hidden = JSON.stringify(S) === JSON.stringify(DEF);
+  $("t-low").hidden = $("d-low").hidden = S.rec === 20; /* com 20% escolhido a linha repetiria a de cima */
+  const tm = c.tmin == null ? null : c.tmin >= 100 ? "acima de 100%" : Math.ceil(c.tmin) + "%";
+  $("prt").textContent = "Estimativa gerada em " + new Date().toLocaleDateString("pt-BR") + (/^https?:/.test(location.protocol) ? " · " + linkAtual() : "");
 
   const tag = $("tag"), dt = $("dock-t");
   const barPreco = $("bar-preco");
@@ -411,7 +440,7 @@ function render() {
     cls = "edge"; txt = "fora do perfil";
     $("vt").textContent = "Clínicas com 4 ou mais cadeiras pedem outro desenho.";
     $("vp").textContent = "Hoje o produto é feito para clínicas de dono operador, de 1 a 3 cadeiras. Fale com a gente se quiser conversar sobre o seu caso.";
-    $("d-plano").textContent = "sob consulta"; $("d-ratio").textContent = "—"; $("d-min").textContent = "—"; $("d-piloto").textContent = "—";
+    $("d-plano").textContent = "sob consulta"; $("d-ratio").textContent = "—"; $("d-min").textContent = "—"; $("d-piloto").textContent = "—"; $("d-tmin").textContent = "—"; $("d-low").textContent = "—";
     barPreco.hidden = true; $("barnote").hidden = true;
   } else {
     barPreco.hidden = false; $("barnote").hidden = false;
@@ -421,6 +450,8 @@ function render() {
     $("d-plano").textContent = c.plano;
     $("d-ratio").textContent = PCT(c.ratio);
     $("d-min").textContent = BRL(c.min);
+    $("d-tmin").textContent = tm;
+    $("d-low").textContent = PCT(c.low);
     if (c.ratio <= CONFIG.limite) {
       cls = "ok"; txt = "cabe";
       $("vt").textContent = "A mensalidade fica abaixo de 15% do que a clínica pode recuperar.";
@@ -428,11 +459,11 @@ function render() {
     } else if (c.ratio <= CONFIG.borda) {
       cls = "edge"; txt = "no limite";
       $("vt").textContent = "Está perto do ponto em que a conta deixa de ser óbvia.";
-      $("vp").textContent = "A mensalidade ficaria entre 15% e 25% do recuperável estimado. Só vale se a sua taxa real de falta ou a receita por horário forem maiores do que as informadas. Medir antes responde isso.";
+      $("vp").textContent = "A mensalidade ficaria entre 15% e 25% do recuperável estimado. Só vale se a sua taxa real de falta ou a receita por horário forem maiores do que as informadas. Com essa agenda, a conta fica clara a partir de uma taxa de falta de " + tm + ". Medir antes responde isso.";
     } else {
       cls = "no"; txt = "ainda não compensa";
       $("vt").textContent = "Com esses números, não recomendamos contratar.";
-      $("vp").textContent = "A perda mensal informada fica abaixo do mínimo de " + BRL(c.min) + " para a mensalidade se pagar com folga. Se a sua taxa de falta real for maior, refaça a conta.";
+      $("vp").textContent = "A perda mensal informada fica abaixo do mínimo de " + BRL(c.min) + " para a mensalidade se pagar com folga. Com essa agenda, isso pede uma taxa de falta de " + (c.tmin >= 100 ? "mais de 100%" : "ao menos " + tm) + (c.tmin > 30 ? ", acima da faixa de 20% a 30% que usamos como referência." : ". Se a sua taxa real for maior, refaça a conta.");
     }
   }
   tag.className = "tag " + (cls === "ok" ? "" : cls); tag.textContent = txt;
@@ -509,6 +540,7 @@ const grid = (() => {
   function target(c) {
     total = S.cons; faltas = c.faltas; rec = Math.round(c.faltas * S.rec / 100);
     ordena(); semana = -1;
+    cv.setAttribute("aria-label", "Agenda do mês: " + total + " consultas, " + faltas + " faltas, " + rec + " horários recuperados. Cada ponto é uma consulta.");
     layout(); tickNumber(c.perda); start();
   }
   let raf = 0;
@@ -603,6 +635,29 @@ const grid = (() => {
 document.querySelectorAll("#seg button").forEach((b) => b.addEventListener("click", () => {
   S.cad = +b.dataset.v; live = true; render();
 }));
+/* "Não sei a minha taxa": o número de faltas do mês passado vira o percentual */
+$("calc-t").addEventListener("click", () => {
+  const box = $("calc-box"), abre = box.hidden;
+  box.hidden = !abre; $("calc-t").setAttribute("aria-expanded", String(abre));
+  if (abre) $("n-fal").focus();
+});
+$("n-fal").addEventListener("input", (e) => {
+  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 3);
+  const f = +e.target.value, out = $("cb-res");
+  if (!f) { out.textContent = ""; return; }
+  const real = f / S.cons * 100;
+  if (real > 100) { out.textContent = "Mais faltas do que consultas no mês. Confira o número."; return; }
+  const t = Math.min(LIM.taxa[1], Math.max(LIM.taxa[0], Math.round(real)));
+  S.taxa = t; live = true; render();
+  out.textContent = "Isso dá " + PCT(real / 100) + " das " + S.cons + " consultas." + (t !== Math.round(real) ? " O controle vai de 5% a 45%, então usamos " + t + "%." : "");
+});
+$("reset").addEventListener("click", () => {
+  Object.assign(S, DEF); live = false;
+  $("n-fal").value = ""; $("cb-res").textContent = "";
+  try { history.replaceState(null, "", location.pathname); } catch (e) { /* sem histórico: segue */ }
+  render();
+  $("cons").focus({ preventScroll: true });
+});
 async function copiar(btn, texto, rotulo) {
   try { await navigator.clipboard.writeText(texto); btn.textContent = "Copiado ✓"; }
   catch (e) { prompt("Copie:", texto); }
