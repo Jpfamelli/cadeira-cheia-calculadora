@@ -212,12 +212,15 @@ footer p{max-width:84ch;margin-bottom:8px}
   .ring{display:none!important}
 }
 </style>
+<link rel="canonical" href="https://jpfamelli.github.io/cadeira-cheia-calculadora/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Quanto custam as faltas na sua agenda?","description":"Calculadora gratuita que estima, em reais por mês, o que as faltas custam a uma clínica odontológica.","url":"https://jpfamelli.github.io/cadeira-cheia-calculadora/","applicationCategory":"BusinessApplication","operatingSystem":"Qualquer","inLanguage":"pt-BR","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"}}</script>
 </head>
 <body>
 <div class="ring" id="ring" aria-hidden="true"></div>
 
 <header class="top"><b>Cadeira Cheia</b><span>Calculadora gratuita · 1 minuto</span></header>
 
+<noscript><p style="margin:32px var(--pad);font-size:18px">Esta calculadora precisa de JavaScript para fazer a conta no seu navegador. Ative o JavaScript e recarregue a página.</p></noscript>
 <main>
 <section class="hero">
   <div class="a-head rise"><h1>Quanto custam <b>as faltas</b> na sua agenda?</h1></div>
@@ -440,7 +443,16 @@ function render() {
   render.resumo = resumo + (/^https?:/.test(location.protocol) ? " Meus números: " + linkAtual() : "");
   if (live) { try { history.replaceState(null, "", "?" + parametros()); } catch (e) { /* sem histórico: segue */ } }
   const wa = $("wa");
-  if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(render.resumo + " Quero medir a minha clínica no piloto de 14 dias.");
+  /* o botão e a mensagem seguem o veredito: nada de "quero contratar" quando a própria conta diz que não compensa */
+  const k = !c.preco ? "fora" : cls;
+  const CTA = {
+    ok: ["Quero medir minha clínica em 14 dias", "Quero medir a minha clínica no piloto de 14 dias."],
+    edge: ["Quero medir antes de decidir", "O resultado ficou no limite. Quero medir a minha taxa real de falta antes de decidir."],
+    no: ["Meus números reais são maiores. Quero conversar", "Com esses números não compensou, mas acho que a minha taxa real de falta é maior. Quero conversar."],
+    fora: ["Quero conversar sobre a minha clínica", "A minha clínica tem 4 ou mais cadeiras. Quero conversar sobre o meu caso."]
+  }[k];
+  wa.textContent = CTA[0];
+  if (CONFIG.whatsapp) wa.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(render.resumo + " " + CTA[1]);
   else wa.href = "#";
 
   clearTimeout(liveT);
